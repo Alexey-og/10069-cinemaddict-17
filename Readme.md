@@ -1,7 +1,7 @@
 # Проект «Киноман»
 
 * Студент: [Алексей Огурцов](https://up.htmlacademy.ru/ecmascript/17/user/10069).
-* Наставник: `Неизвестно`.
+* Наставник: [Дмитрий (sench) Железцов](https://htmlacademy.ru/profile/id983299).
 
 ---
 
