@@ -1,5 +1,7 @@
 import {render} from './render.js';
 
+import './mock/film.js';
+
 import HeaderProfileView from './view/header-profile-view.js';
 import MainNavigationView from './view/main-navigation-view.js';
 import SortView from './view/sort-view.js';
