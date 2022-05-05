@@ -155,7 +155,7 @@ const createFilm = () => {
       title: randomFilm.title,
       alternativeTitle: randomFilm.title,
       totalRating: getRandomNumberInRange(MIN_FILM_RATING, MAX_FILM_RATING, 1),
-      poster: `images/posters/${randomFilm.poster}`,
+      poster: randomFilm.poster,
       ageRating: getRandomArrayElement(ageRatings),
       director: getRandomArrayElement(directors),
       writers: getRandomCountArrayElements(screenwriters, 1, 5),
@@ -165,7 +165,7 @@ const createFilm = () => {
         releaseCountry: getRandomArrayElement(countries)
       },
       runtime: getRandomNumberInRange(MIN_FILM_DURATING, MAX_FILM_DURATING),
-      genre: getRandomCountArrayElements(genres, 1, 5),
+      genre: getRandomCountArrayElements(genres, 1, 2),
       description: createDescription()
     },
     userDetails: {
