@@ -1,7 +1,22 @@
+import { createComment } from '../mock/comment.js';
 import { createFilm } from '../mock/film.js';
+import { getRandomIntegerInRange } from '../utils.js';
+
+const COMMENTS_MIN_QUANTITY = 0;
+const COMMENTS_MAX_QUANTITY = 10;
+const FILMS_MIN_QUANTITY = 3;
+const FILMS_MAX_QUANTITY = 15;
+
+const commentsQuantity = getRandomIntegerInRange(COMMENTS_MIN_QUANTITY, COMMENTS_MAX_QUANTITY);
+const filmsQuantity = getRandomIntegerInRange(FILMS_MIN_QUANTITY, FILMS_MAX_QUANTITY);
 
 export default class FilmsModel {
-  films = Array.from({length: 5}, createFilm);
+  comments = Array.from({length: commentsQuantity}, createComment);
+  films = Array.from({length: filmsQuantity}, createFilm);
+
+  getComments = () => (
+    this.comments
+  );
 
   getFilms = () => (
     this.films

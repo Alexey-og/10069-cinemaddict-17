@@ -129,6 +129,7 @@ const convertMinsToHrsMins = (mins) => {
 
 
 export {
+  getRandomIntegerInRange,
   getRandomNumberInRange,
   getRandomArrayElement,
   getRandomObjectValue,

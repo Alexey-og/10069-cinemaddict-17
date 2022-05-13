@@ -1,4 +1,5 @@
 import {
+  getRandomIntegerInRange,
   getRandomNumberInRange,
   getRandomArrayElement,
   getRandomObjectValue,
@@ -8,7 +9,6 @@ import {
 
 const SENTENCES_MIN_QUANTITY = 1;
 const SENTENCES_MAX_QUANTITY = 5;
-const DESCRIPTON_MAX_LENGTH = 140;
 const YEAR_FIRST_FILM = new Date(1895, 12, 28);
 const MIN_FILM_RATING = 1.0;
 const MAX_FILM_RATING = 9.9;
@@ -84,7 +84,7 @@ const directors = [
 
 const screenwriters = [
   'Billy Wilder',
-  'Ethan Coen and Joel Coen',
+  'Coen brothers',
   'Robert Towne',
   'Quentin Tarantino',
   'Francis Ford Coppola',
@@ -137,20 +137,20 @@ const genres = [
 
 const createDescription = () => {
   let description = '';
-  for (let i = 0; i < getRandomNumberInRange(SENTENCES_MIN_QUANTITY, SENTENCES_MAX_QUANTITY); i++) {
+  for (let i = 0; i < getRandomIntegerInRange(SENTENCES_MIN_QUANTITY, SENTENCES_MAX_QUANTITY); i++) {
     description += ` ${getRandomArrayElement(descriptions)}`;
-  }
-  if (description.length > DESCRIPTON_MAX_LENGTH) {
-    return `${description.slice(0, DESCRIPTON_MAX_LENGTH)}...`;
   }
   return description;
 };
+
+
+let id = 0;
 
 const createFilm = () => {
   const randomFilm = getRandomObjectValue(films);
 
   return {
-    id: 0,
+    id: id++,
     filmInfo: {
       title: randomFilm.title,
       alternativeTitle: randomFilm.title,
@@ -164,17 +164,17 @@ const createFilm = () => {
         date: getRandomDate(YEAR_FIRST_FILM),
         releaseCountry: getRandomArrayElement(countries)
       },
-      runtime: getRandomNumberInRange(MIN_FILM_DURATING, MAX_FILM_DURATING),
-      genre: getRandomCountArrayElements(genres, 1, 2),
+      runtime: getRandomIntegerInRange(MIN_FILM_DURATING, MAX_FILM_DURATING),
+      genre: getRandomCountArrayElements(genres, 1, 3),
       description: createDescription()
     },
     userDetails: {
-      watchlist: Boolean(getRandomNumberInRange(0, 1)),
-      alreadyWatched: Boolean(getRandomNumberInRange(0, 1)),
+      watchlist: Boolean(getRandomIntegerInRange(0, 1)),
+      alreadyWatched: Boolean(getRandomIntegerInRange(0, 1)),
       watchingDate: getRandomDate(FIRST_WATCHING_DATE),
-      favorite: Boolean(getRandomNumberInRange(0, 1))
+      favorite: Boolean(getRandomIntegerInRange(0, 1))
     },
-    comments: [1, 2, 3, 4, 5]
+    comments: [1, 2, 3, 4, 5, 6, 7]
   };
 };
 
