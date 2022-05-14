@@ -35,40 +35,16 @@ export default class FilmsPresenter {
   #topRatedMoviesContainerElement = this.#topRatedMoviesListComponent.element.querySelector('.films-list__container');
   #mostCommentedMoviesContainerElement = this.#mostCommentedMoviesListComponent.element.querySelector('.films-list__container');
 
-  init = (filmsContainer, filmsModel) => {
+  constructor(filmsContainer, filmsModel) {
     this.#filmsContainer = filmsContainer;
     this.#filmsModel = filmsModel;
+  }
+
+  init = () => {
     this.#comments = [...this.#filmsModel.comments];
     this.#films = [...this.#filmsModel.films];
 
-    if (this.#films.length === 0) {
-      render(new NoMoviesView(), this.#filmsContainer);
-    } else {
-      render(new SortView(), this.#pageMainElement);
-      render(this.#filmsWrapperComponent, this.#filmsContainer);
-      render(this.#allMoviesListComponent, this.#filmsWrapperComponent.element);
-
-      for (let i = 0; i < Math.min(this.#films.length, FILM_COUNT_PER_STEP); i++) {
-        this.#renderFilm(this.#films[i]);
-      }
-
-      if (this.#films.length > FILM_COUNT_PER_STEP) {
-        render(this.#showMoreButtonComponent, this.#allMoviesListComponent.element);
-        this.#showMoreButtonComponent.element.addEventListener('click', this.#handleShowMoreButtonClick);
-      }
-
-      render(this.#topRatedMoviesListComponent, this.#filmsWrapperComponent.element);
-
-      for (let i = 0; i < TOP_RATED_FILMS_COUNT; i++) {
-        this.#renderFilm(getRandomArrayElement(this.#films), this.#topRatedMoviesContainerElement);
-      }
-
-      render(this.#mostCommentedMoviesListComponent, this.#filmsWrapperComponent.element);
-
-      for (let i = 0; i < MOST_COMMENTED_FILMS_COUNT; i++) {
-        this.#renderFilm(getRandomArrayElement(this.#films), this.#mostCommentedMoviesContainerElement);
-      }
-    }
+    this.#renderFilms();
   };
 
   #handleShowMoreButtonClick = (evt) => {
@@ -118,5 +94,37 @@ export default class FilmsPresenter {
     });
 
     render(filmComponent, container);
+  };
+
+  #renderFilms = () => {
+    if (this.#films.length === 0) {
+      render(new NoMoviesView(), this.#filmsContainer);
+      return;
+    }
+
+    render(new SortView(), this.#pageMainElement);
+    render(this.#filmsWrapperComponent, this.#filmsContainer);
+    render(this.#allMoviesListComponent, this.#filmsWrapperComponent.element);
+
+    for (let i = 0; i < Math.min(this.#films.length, FILM_COUNT_PER_STEP); i++) {
+      this.#renderFilm(this.#films[i]);
+    }
+
+    if (this.#films.length > FILM_COUNT_PER_STEP) {
+      render(this.#showMoreButtonComponent, this.#allMoviesListComponent.element);
+      this.#showMoreButtonComponent.element.addEventListener('click', this.#handleShowMoreButtonClick);
+    }
+
+    render(this.#topRatedMoviesListComponent, this.#filmsWrapperComponent.element);
+
+    for (let i = 0; i < TOP_RATED_FILMS_COUNT; i++) {
+      this.#renderFilm(getRandomArrayElement(this.#films), this.#topRatedMoviesContainerElement);
+    }
+
+    render(this.#mostCommentedMoviesListComponent, this.#filmsWrapperComponent.element);
+
+    for (let i = 0; i < MOST_COMMENTED_FILMS_COUNT; i++) {
+      this.#renderFilm(getRandomArrayElement(this.#films), this.#mostCommentedMoviesContainerElement);
+    }
   };
 }
