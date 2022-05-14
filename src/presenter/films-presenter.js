@@ -7,24 +7,30 @@ import FilmCardView from '../view/film-card-view.js';
 import FilmPopupView from '../view/film-popup-view.js';
 import FilmsWrapperView from '../view/films-wrapper-view.js';
 import MostCommentedMoviesListView from '../view/most-commented-movies-list-view.js';
+import NoMoviesView from '../view/no-movies-view.js';
 import ShowMoreButtonView from '../view/show-more-button-view.js';
+import SortView from '../view/sort-view.js';
 import TopRatedMoviesListView from '../view/top-rated-movies-list-view.js';
 
-const TOP_RATED_MOVIES_CARDS_COUNT = 2;
-const MOST_COMMENTED_MOVIES_CARDS_COUNT = 2;
+const FILM_COUNT_PER_STEP = 5;
+const TOP_RATED_FILMS_COUNT = 2;
+const MOST_COMMENTED_FILMS_COUNT = 2;
 
 export default class FilmsPresenter {
   #filmsContainer = null;
   #filmsModel = null;
   #comments = [];
   #films = [];
+  #renderedFilmCount = FILM_COUNT_PER_STEP;
 
   #allMoviesListComponent = new AllMoviesListView();
   #filmsWrapperComponent = new FilmsWrapperView();
   #mostCommentedMoviesListComponent = new MostCommentedMoviesListView();
+  #showMoreButtonComponent = new ShowMoreButtonView();
   #topRatedMoviesListComponent = new TopRatedMoviesListView();
 
   #pageBodyElement = document.querySelector('body');
+  #pageMainElement = document.querySelector('.main');
   #allMoviesContainerElement = this.#allMoviesListComponent.element.querySelector('.films-list__container');
   #topRatedMoviesContainerElement = this.#topRatedMoviesListComponent.element.querySelector('.films-list__container');
   #mostCommentedMoviesContainerElement = this.#mostCommentedMoviesListComponent.element.querySelector('.films-list__container');
@@ -35,30 +41,51 @@ export default class FilmsPresenter {
     this.#comments = [...this.#filmsModel.comments];
     this.#films = [...this.#filmsModel.films];
 
-    render(this.#filmsWrapperComponent, this.#filmsContainer);
+    if (this.#films.length === 0) {
+      render(new NoMoviesView(), this.#filmsContainer);
+    } else {
+      render(new SortView(), this.#pageMainElement);
+      render(this.#filmsWrapperComponent, this.#filmsContainer);
+      render(this.#allMoviesListComponent, this.#filmsWrapperComponent.element);
 
-    render(this.#allMoviesListComponent, this.#filmsWrapperComponent.element);
+      for (let i = 0; i < Math.min(this.#films.length, FILM_COUNT_PER_STEP); i++) {
+        this.#renderFilm(this.#films[i]);
+      }
 
-    for (let i = 0; i < this.#films.length; i++) {
-      this.#renderFilm(this.#films[i], this.#allMoviesContainerElement);
-    }
+      if (this.#films.length > FILM_COUNT_PER_STEP) {
+        render(this.#showMoreButtonComponent, this.#allMoviesListComponent.element);
+        this.#showMoreButtonComponent.element.addEventListener('click', this.#handleShowMoreButtonClick);
+      }
 
-    render(new ShowMoreButtonView(), this.#allMoviesListComponent.element);
+      render(this.#topRatedMoviesListComponent, this.#filmsWrapperComponent.element);
 
-    render(this.#topRatedMoviesListComponent, this.#filmsWrapperComponent.element);
+      for (let i = 0; i < TOP_RATED_FILMS_COUNT; i++) {
+        this.#renderFilm(getRandomArrayElement(this.#films), this.#topRatedMoviesContainerElement);
+      }
 
-    for (let i = 0; i < TOP_RATED_MOVIES_CARDS_COUNT; i++) {
-      this.#renderFilm(getRandomArrayElement(this.#films), this.#topRatedMoviesContainerElement);
-    }
+      render(this.#mostCommentedMoviesListComponent, this.#filmsWrapperComponent.element);
 
-    render(this.#mostCommentedMoviesListComponent, this.#filmsWrapperComponent.element);
-
-    for (let i = 0; i < MOST_COMMENTED_MOVIES_CARDS_COUNT; i++) {
-      this.#renderFilm(getRandomArrayElement(this.#films), this.#mostCommentedMoviesContainerElement);
+      for (let i = 0; i < MOST_COMMENTED_FILMS_COUNT; i++) {
+        this.#renderFilm(getRandomArrayElement(this.#films), this.#mostCommentedMoviesContainerElement);
+      }
     }
   };
 
-  #renderFilm = (filmCard, container) => {
+  #handleShowMoreButtonClick = (evt) => {
+    evt.preventDefault();
+    this.#films
+      .slice(this.#renderedFilmCount, this.#renderedFilmCount + FILM_COUNT_PER_STEP)
+      .forEach((film) => this.#renderFilm(film));
+
+    this.#renderedFilmCount += FILM_COUNT_PER_STEP;
+
+    if (this.#renderedFilmCount >= this.#films.length) {
+      this.#showMoreButtonComponent.element.remove();
+      this.#showMoreButtonComponent.removeElement();
+    }
+  };
+
+  #renderFilm = (filmCard, container = this.#allMoviesContainerElement) => {
     const filmComponent = new FilmCardView(filmCard);
     const popupComponent = new FilmPopupView(filmCard, this.#comments);
 
