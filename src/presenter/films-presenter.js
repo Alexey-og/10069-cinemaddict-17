@@ -14,43 +14,82 @@ const TOP_RATED_MOVIES_CARDS_COUNT = 2;
 const MOST_COMMENTED_MOVIES_CARDS_COUNT = 2;
 
 export default class FilmsPresenter {
-  pageBodyElement = document.querySelector('body');
-  filmsWrapperComponent = new FilmsWrapperView();
-  allMoviesListComponent = new AllMoviesListView();
-  allMoviesContainerElement = this.allMoviesListComponent.getElement().querySelector('.films-list__container');
-  topRatedMoviesListComponent = new TopRatedMoviesListView();
-  topRatedMoviesContainerElement = this.topRatedMoviesListComponent.getElement().querySelector('.films-list__container');
-  mostCommentedMoviesListComponent = new MostCommentedMoviesListView();
-  mostCommentedMoviesContainerElement = this.mostCommentedMoviesListComponent.getElement().querySelector('.films-list__container');
+  #filmsContainer = null;
+  #filmsModel = null;
+  #comments = [];
+  #films = [];
+
+  #allMoviesListComponent = new AllMoviesListView();
+  #filmsWrapperComponent = new FilmsWrapperView();
+  #mostCommentedMoviesListComponent = new MostCommentedMoviesListView();
+  #topRatedMoviesListComponent = new TopRatedMoviesListView();
+
+  #pageBodyElement = document.querySelector('body');
+  #allMoviesContainerElement = this.#allMoviesListComponent.element.querySelector('.films-list__container');
+  #topRatedMoviesContainerElement = this.#topRatedMoviesListComponent.element.querySelector('.films-list__container');
+  #mostCommentedMoviesContainerElement = this.#mostCommentedMoviesListComponent.element.querySelector('.films-list__container');
 
   init = (filmsContainer, filmsModel) => {
-    this.filmsContainer = filmsContainer;
-    this.filmsModel = filmsModel;
-    this.comments = [...this.filmsModel.getComments()];
-    this.films = [...this.filmsModel.getFilms()];
+    this.#filmsContainer = filmsContainer;
+    this.#filmsModel = filmsModel;
+    this.#comments = [...this.#filmsModel.comments];
+    this.#films = [...this.#filmsModel.films];
 
-    render(this.filmsWrapperComponent, this.filmsContainer);
+    render(this.#filmsWrapperComponent, this.#filmsContainer);
 
-    render(this.allMoviesListComponent, this.filmsWrapperComponent.getElement());
+    render(this.#allMoviesListComponent, this.#filmsWrapperComponent.element);
 
-    for (let i = 0; i < this.films.length; i++) {
-      render(new FilmCardView(this.films[i]), this.allMoviesContainerElement);
+    for (let i = 0; i < this.#films.length; i++) {
+      this.#renderFilm(this.#films[i], this.#allMoviesContainerElement);
     }
 
-    render(new ShowMoreButtonView(), this.allMoviesListComponent.getElement());
+    render(new ShowMoreButtonView(), this.#allMoviesListComponent.element);
 
-    render(this.topRatedMoviesListComponent, this.filmsWrapperComponent.getElement());
+    render(this.#topRatedMoviesListComponent, this.#filmsWrapperComponent.element);
 
     for (let i = 0; i < TOP_RATED_MOVIES_CARDS_COUNT; i++) {
-      render(new FilmCardView(getRandomArrayElement(this.films)), this.topRatedMoviesContainerElement);
+      this.#renderFilm(getRandomArrayElement(this.#films), this.#topRatedMoviesContainerElement);
     }
 
-    render(this.mostCommentedMoviesListComponent, this.filmsWrapperComponent.getElement());
+    render(this.#mostCommentedMoviesListComponent, this.#filmsWrapperComponent.element);
 
     for (let i = 0; i < MOST_COMMENTED_MOVIES_CARDS_COUNT; i++) {
-      render(new FilmCardView(getRandomArrayElement(this.films)), this.mostCommentedMoviesContainerElement);
+      this.#renderFilm(getRandomArrayElement(this.#films), this.#mostCommentedMoviesContainerElement);
     }
+  };
 
-    render(new FilmPopupView(this.films[0], this.comments), this.pageBodyElement);
+  #renderFilm = (filmCard, container) => {
+    const filmComponent = new FilmCardView(filmCard);
+    const popupComponent = new FilmPopupView(filmCard, this.#comments);
+
+    const openFilmPopup = () => {
+      this.#pageBodyElement.classList.add('hide-overflow');
+      this.#pageBodyElement.appendChild(popupComponent.element);
+    };
+
+    const closeFilmPopup = () => {
+      this.#pageBodyElement.classList.remove('hide-overflow');
+      this.#pageBodyElement.removeChild(popupComponent.element);
+    };
+
+    const onEscKeyDown = (evt) => {
+      if (evt.key === 'Escape' || evt.key === 'Esc') {
+        evt.preventDefault();
+        closeFilmPopup();
+        document.removeEventListener('keydown', onEscKeyDown);
+      }
+    };
+
+    filmComponent.element.querySelector('.film-card__link').addEventListener('click', () => {
+      openFilmPopup();
+      document.addEventListener('keydown', onEscKeyDown);
+    });
+
+    popupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
+      closeFilmPopup();
+      document.removeEventListener('keydown', onEscKeyDown);
+    });
+
+    render(filmComponent, container);
   };
 }
