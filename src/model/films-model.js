@@ -11,14 +11,14 @@ const commentsQuantity = getRandomIntegerInRange(COMMENTS_MIN_QUANTITY, COMMENTS
 const filmsQuantity = getRandomIntegerInRange(FILMS_MIN_QUANTITY, FILMS_MAX_QUANTITY);
 
 export default class FilmsModel {
-  comments = Array.from({length: commentsQuantity}, createComment);
-  films = Array.from({length: filmsQuantity}, createFilm);
+  #comments = Array.from({length: commentsQuantity}, createComment);
+  #films = Array.from({length: filmsQuantity}, createFilm);
 
-  getComments = () => (
-    this.comments
-  );
+  get comments() {
+    return this.#comments;
+  }
 
-  getFilms = () => (
-    this.films
-  );
+  get films() {
+    return this.#films;
+  }
 }

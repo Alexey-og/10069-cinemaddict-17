@@ -1,4 +1,4 @@
-import {createElement} from '../render.js';
+import { createElement } from '../render.js';
 
 const createMostCommentedMoviesListTemplate = () => (
   `<section class="films-list films-list--extra">
@@ -9,19 +9,20 @@ const createMostCommentedMoviesListTemplate = () => (
 );
 
 export default class MostCommentedMoviesListView {
-  getTemplate() {
+  #element = null;
+
+  get template() {
     return createMostCommentedMoviesListTemplate();
   }
 
-  getElement() {
-    if (!this.element) {
-      this.element = createElement(this.getTemplate());
+  get element() {
+    if (!this.#element) {
+      this.#element = createElement(this.template);
     }
-
-    return this.element;
+    return this.#element;
   }
 
   removeElement() {
-    this.element = null;
+    this.#element = null;
   }
 }
