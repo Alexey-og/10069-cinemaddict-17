@@ -1,6 +1,9 @@
-import { render } from '../render.js';
+import {
+  render,
+  remove
+} from '../framework/render.js';
 
-import { getRandomArrayElement } from '../utils.js';
+import { getRandomArrayElement } from '../utils/common.js';
 
 import AllMoviesListView from '../view/all-movies-list-view.js';
 import FilmCardView from '../view/film-card-view.js';
@@ -47,8 +50,7 @@ export default class FilmsPresenter {
     this.#renderFilms();
   };
 
-  #handleShowMoreButtonClick = (evt) => {
-    evt.preventDefault();
+  #handleShowMoreButtonClick = () => {
     this.#films
       .slice(this.#renderedFilmCount, this.#renderedFilmCount + FILM_COUNT_PER_STEP)
       .forEach((film) => this.#renderFilm(film));
@@ -56,8 +58,7 @@ export default class FilmsPresenter {
     this.#renderedFilmCount += FILM_COUNT_PER_STEP;
 
     if (this.#renderedFilmCount >= this.#films.length) {
-      this.#showMoreButtonComponent.element.remove();
-      this.#showMoreButtonComponent.removeElement();
+      remove(this.#showMoreButtonComponent);
     }
   };
 
@@ -83,12 +84,12 @@ export default class FilmsPresenter {
       }
     };
 
-    filmComponent.element.querySelector('.film-card__link').addEventListener('click', () => {
+    filmComponent.setOpenPopupClickHandler(() => {
       openFilmPopup();
       document.addEventListener('keydown', onEscKeyDown);
     });
 
-    popupComponent.element.querySelector('.film-details__close-btn').addEventListener('click', () => {
+    popupComponent.setClosePopupClickHandler(() => {
       closeFilmPopup();
       document.removeEventListener('keydown', onEscKeyDown);
     });
@@ -112,7 +113,7 @@ export default class FilmsPresenter {
 
     if (this.#films.length > FILM_COUNT_PER_STEP) {
       render(this.#showMoreButtonComponent, this.#allMoviesListComponent.element);
-      this.#showMoreButtonComponent.element.addEventListener('click', this.#handleShowMoreButtonClick);
+      this.#showMoreButtonComponent.setShowMoreClickHandler(this.#handleShowMoreButtonClick);
     }
 
     render(this.#topRatedMoviesListComponent, this.#filmsWrapperComponent.element);

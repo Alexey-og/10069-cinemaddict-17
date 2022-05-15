@@ -5,7 +5,7 @@ import {
   getRandomObjectValue,
   getRandomCountArrayElements,
   getRandomDate
-} from '../utils.js';
+} from '../utils/common.js';
 
 const SENTENCES_MIN_QUANTITY = 1;
 const SENTENCES_MAX_QUANTITY = 5;

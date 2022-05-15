@@ -1,7 +1,7 @@
 import {
   getRandomArrayElement,
   getRandomDate
-} from '../utils.js';
+} from '../utils/common.js';
 
 const FIRST_COMMENT_DATE = new Date(2022, 2, 20);
 

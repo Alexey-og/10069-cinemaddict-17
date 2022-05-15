@@ -1,8 +1,8 @@
-import { createElement } from '../render.js';
+import AbstractView from '../framework/view/abstract-view.js';
 import {
   getFormatedDate,
   convertMinsToHrsMins
-} from '../utils.js';
+} from '../utils/film.js';
 
 const DESCRIPTON_MAX_LENGTH = 140;
 
@@ -39,11 +39,11 @@ const createFilmCardTemplate = (film) => {
   </article>`;
 };
 
-export default class FilmCardView {
-  #element = null;
+export default class FilmCardView extends AbstractView {
   #film = null;
 
   constructor(film) {
+    super();
     this.#film = film;
   }
 
@@ -51,15 +51,13 @@ export default class FilmCardView {
     return createFilmCardTemplate(this.#film);
   }
 
-  get element() {
-    if (!this.#element) {
-      this.#element = createElement(this.template);
-    }
+  setOpenPopupClickHandler = (callback) => {
+    this._callback.openPopupClick = callback;
+    this.element.querySelector('.film-card__link').addEventListener('click', this.#openPopupClickHandler);
+  };
 
-    return this.#element;
-  }
-
-  removeElement() {
-    this.#element = null;
-  }
+  #openPopupClickHandler = (evt) => {
+    evt.preventDefault();
+    this._callback.openPopupClick();
+  };
 }

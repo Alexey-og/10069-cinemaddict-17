@@ -1,6 +1,6 @@
 import { createComment } from '../mock/comment.js';
 import { createFilm } from '../mock/film.js';
-import { getRandomIntegerInRange } from '../utils.js';
+import { getRandomIntegerInRange } from '../utils/common.js';
 
 const COMMENTS_MIN_QUANTITY = 0;
 const COMMENTS_MAX_QUANTITY = 10;
