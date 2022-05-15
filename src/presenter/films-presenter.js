@@ -1,4 +1,4 @@
-import { render } from '../render.js';
+import { render } from '../framework/render.js';
 
 import { getRandomArrayElement } from '../utils.js';
 
