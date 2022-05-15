@@ -2,7 +2,7 @@ import AbstractView from '../framework/view/abstract-view.js';
 import {
   getFormatedDate,
   convertMinsToHrsMins
-} from '../utils.js';
+} from '../utils/film.js';
 
 const DESCRIPTON_MAX_LENGTH = 140;
 

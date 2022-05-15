@@ -1,6 +1,9 @@
-import { render } from '../framework/render.js';
+import {
+  render,
+  remove
+} from '../framework/render.js';
 
-import { getRandomArrayElement } from '../utils.js';
+import { getRandomArrayElement } from '../utils/common.js';
 
 import AllMoviesListView from '../view/all-movies-list-view.js';
 import FilmCardView from '../view/film-card-view.js';
@@ -55,8 +58,7 @@ export default class FilmsPresenter {
     this.#renderedFilmCount += FILM_COUNT_PER_STEP;
 
     if (this.#renderedFilmCount >= this.#films.length) {
-      this.#showMoreButtonComponent.element.remove();
-      this.#showMoreButtonComponent.removeElement();
+      remove(this.#showMoreButtonComponent);
     }
   };
 
